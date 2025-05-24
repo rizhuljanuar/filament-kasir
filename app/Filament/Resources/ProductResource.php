@@ -20,33 +20,41 @@ class ProductResource extends Resource
 
     protected static ?string $cluster = ProductCluster::class;
 
+    protected static ?int $navigationSort = 1;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->live(onBlur: true)
+                    ->required()
+                    ->maxLength(255)
                     ->afterStateUpdated(function ($state, callable $set) {
                         $set('slug', Str::slug($state));
                     }),
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name'),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->readOnly(),
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->required(),
                 Forms\Components\TextInput::make('stock')
+                    ->required()
                     ->numeric()
-                    ->required(),
+                    ->prefix('Rp.'),
                 Forms\Components\TextInput::make('price')
+                    ->required()
                     ->numeric()
-                    ->prefix('Rp')
-                    ->required(),
+                    ->prefix('Rp'),
                 Forms\Components\Toggle::make('is_active')
                     ->required(),
-                Forms\Components\TextInput::make('barcode'),
-                Forms\Components\FileUpload::make('image'),
-                Forms\Components\Textarea::make('description'),
+                Forms\Components\FileUpload::make('image')
+                    ->image(),
+                Forms\Components\TextInput::make('barcode')
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
             ]);
     }
 

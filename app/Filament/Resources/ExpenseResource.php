@@ -16,6 +16,11 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $navigationGroup = 'Others';
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -26,7 +31,8 @@ class ExpenseResource extends Resource
                 Forms\Components\Textarea::make('note')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('date_expense'),
+                Forms\Components\DatePicker::make('date_expense')
+                    ->required(),
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),

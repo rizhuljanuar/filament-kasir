@@ -19,6 +19,10 @@ class PaymentMethodResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 4;
+
+    protected static ?string $navigationGroup = 'Others';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -27,8 +31,7 @@ class PaymentMethodResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
-                    ->image()
-                    ->required(),
+                    ->image(),
                 Forms\Components\Toggle::make('is_cash')
                     ->required(),
             ]);
