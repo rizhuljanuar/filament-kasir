@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->date('birthday')->nullable();
             $table->integer('total_price');
-            $table->text('notes')->nullable();
+            $table->text('note')->nullable();
             $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->nullOnDelete();
             $table->integer('paid_amount');
             $table->integer('change_amount')->nullable();

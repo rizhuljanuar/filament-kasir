@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExpenseResource\Pages;
-use App\Filament\Resources\ExpenseResource\RelationManagers;
 use App\Models\Expense;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExpenseResource extends Resource
 {
@@ -27,7 +24,9 @@ class ExpenseResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('note')
+                    ->required()
                     ->columnSpanFull(),
+                Forms\Components\DatePicker::make('date_expense'),
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
@@ -38,6 +37,9 @@ class ExpenseResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('date_expense')
+                    ->date()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
