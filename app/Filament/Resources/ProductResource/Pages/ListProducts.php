@@ -19,6 +19,10 @@ class ListProducts extends ListRecords
                 ->label('Import Product')
                 ->icon('heroicon-s-arrow-down-tray')
                 ->color('danger')
+                ->form([
+                    FileUpload::make('attachment')
+                        ->label('Upload Template Produk')
+                ])
         ];
     }
 }
