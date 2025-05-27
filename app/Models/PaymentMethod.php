@@ -24,6 +24,6 @@ class PaymentMethod extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image ? url('storage/' . $this->image) : '';
+        return $this->image ? url('storage/' . $this->image) : null;
     }
 }
