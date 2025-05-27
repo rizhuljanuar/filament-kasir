@@ -22,4 +22,14 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
+    }
+
+    public function scopeSearch($query, $value)
+    {
+        $query->where("name", "like", "%{$value}%");
+    }
 }
