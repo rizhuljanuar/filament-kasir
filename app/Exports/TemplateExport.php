@@ -2,16 +2,15 @@
 
 namespace App\Exports;
 
-use App\Models\Category;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class TemplateExport implements FromCollection
+class TemplateExport implements WithMultipleSheets
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function sheets(): array
     {
-        return Category::all();
+        return [
+            new ProductsExport(),
+            new CategoriesExport()
+        ];
     }
 }
