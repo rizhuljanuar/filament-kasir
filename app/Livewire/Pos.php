@@ -198,7 +198,7 @@ class Pos extends Component implements HasForms
     {
         $this->validate([
             'name_customer' => 'required|string|max:255',
-            'gender' => 'required|in:male,Female',
+            'gender' => 'required|in:male,female',
             'payment_method_id' => 'required'
         ]);
 

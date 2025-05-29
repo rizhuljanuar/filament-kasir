@@ -6,6 +6,7 @@
             <x-filament::button x-data="" x-on:click="$dispatch('toggle-scanner')" color="primary">
                 Scan Barcode
             </x-filament::button>
+            <livewire:scanner-modal-component/>
         </div>
         <div class="flex-grow">
             <div class="grid grid-cols-8 sm:grid-cols-3 md:grid-cols-8 lg:grid-cols- gap-4">
