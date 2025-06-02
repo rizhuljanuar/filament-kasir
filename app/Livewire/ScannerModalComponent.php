@@ -15,7 +15,7 @@ class ScannerModalComponent extends Component
 
     public function toggleScanner()
     {
-        $this->isScannerOpen = !$this->isScannerOpen;
+        $this->isScannerOpen = ! $this->isScannerOpen;
     }
 
     public function render()

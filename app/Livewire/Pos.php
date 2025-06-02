@@ -6,10 +6,10 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\PaymentMethod;
 use App\Models\Product;
+use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
-use Filament\Forms;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 
@@ -33,17 +33,17 @@ class Pos extends Component implements HasForms
 
     protected $listeners = [
         'loadOrderItems',
-        'scanResult' => 'handleScanResult'
+        'scanResult' => 'handleScanResult',
     ];
 
     public function render()
     {
         $products = Product::where('stock', '>', 0)
-                        ->search($this->search)
-                        ->paginate(3);
+            ->search($this->search)
+            ->paginate(3);
 
         return view('livewire.pos', [
-            'products' => $products
+            'products' => $products,
         ]);
     }
 
@@ -60,7 +60,7 @@ class Pos extends Component implements HasForms
                         Forms\Components\Select::make('gender')
                             ->options([
                                 'male' => 'Male',
-                                'female' => 'Female'
+                                'female' => 'Female',
                             ])
                             ->required(),
                         Forms\Components\TextInput::make('total_price')
@@ -70,9 +70,9 @@ class Pos extends Component implements HasForms
                         Forms\Components\Select::make('payment_method_id')
                             ->required()
                             ->label('Payment Method')
-                            ->options($this->payment_methods->pluck('name', 'id'))
+                            ->options($this->payment_methods->pluck('name', 'id')),
 
-                    ])
+                    ]),
             ]);
     }
 
@@ -101,7 +101,7 @@ class Pos extends Component implements HasForms
             }
 
             $existingItemKey = null;
-            foreach($this->order_items as $key => $item) {
+            foreach ($this->order_items as $key => $item) {
                 if ($item['product_id'] == $productId) {
                     $existingItemKey = $key;
                     break;
@@ -138,7 +138,7 @@ class Pos extends Component implements HasForms
     {
         $product = Product::find($product_id);
 
-        if (!$product) {
+        if (! $product) {
             Notification::make()
                 ->title('Produk tidak ditemukan')
                 ->danger()
@@ -147,9 +147,9 @@ class Pos extends Component implements HasForms
             return;
         }
 
-        foreach($this->order_items as $key => $item) {
+        foreach ($this->order_items as $key => $item) {
             if ($item['quantity'] == $product_id) {
-                if ($item['quantity'] + 1 <= $product->stock) {
+                if ($product->stock >= $item['quantity'] + 1) {
                     $this->order_items[$key]['quantity']++;
                 } else {
                     Notification::make()
@@ -167,7 +167,7 @@ class Pos extends Component implements HasForms
 
     public function decreaseQuantity($product_id)
     {
-        foreach($this->order_items as $key => $item) {
+        foreach ($this->order_items as $key => $item) {
             if ($item['product_id'] == $product_id) {
                 if ($this->order_items[$key]['quantity'] > 1) {
                     $this->order_items[$key]['quantity']--;
@@ -186,11 +186,12 @@ class Pos extends Component implements HasForms
     public function calculateTotal()
     {
         $total = 0;
-        foreach($this->order_items as $item) {
+        foreach ($this->order_items as $item) {
             $total += $item['quantity'] * $item['price'];
         }
 
         $this->total_price = $total;
+
         return $total;
     }
 
@@ -199,7 +200,7 @@ class Pos extends Component implements HasForms
         $this->validate([
             'name_customer' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
-            'payment_method_id' => 'required'
+            'payment_method_id' => 'required',
         ]);
 
         $payment_method_id_temp = $this->payment_method_id;
@@ -208,10 +209,10 @@ class Pos extends Component implements HasForms
             'name' => $this->name_customer,
             'gender' => $this->gender,
             'total_price' => $this->calculateTotal(),
-            'payment_method_id' => $payment_method_id_temp
+            'payment_method_id' => $payment_method_id_temp,
         ]);
 
-        foreach($this->order_items as $item) {
+        foreach ($this->order_items as $item) {
             OrderProduct::create([
                 'order_id' => $order->id,
                 'product_id' => $item['product_id'],
